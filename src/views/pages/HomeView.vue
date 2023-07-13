@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import SideBar from './skelton/SideBar.vue'
-import NavBar from './skelton/NavBar.vue'
-import Footer from './skelton/Footer.vue'
+import SideBar from '../skelton/SideBar.vue'
+import NavBar from '../skelton/NavBar.vue'
+import Footer from '../skelton/Footer.vue'
 </script>
