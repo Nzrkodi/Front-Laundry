@@ -15,6 +15,11 @@ const router = createRouter({
       path: "/jenis",
       name: "jenis",
       component: Jenisview
+    },
+    {
+      path: "/paket",
+      name: "paket",
+      component: PaketView
     }
   ]
 })
