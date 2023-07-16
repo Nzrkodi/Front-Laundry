@@ -3,6 +3,7 @@ import HomeView from '../views/pages/HomeView.vue'
 import Jenisview from '../views/pages/JenisView.vue'
 import PaketView from '../views/pages/PaketView.vue'
 import ClientView from '../views/pages/ClientView.vue'
+import PegawaiView from '../views/pages/PegawaiView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: "/client",
       name: "client",
       component: ClientView
+    },
+    {
+      path: "/pegawai",
+      name: "pegawai",
+      component: PegawaiView
     }
   ]
 })
