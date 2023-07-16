@@ -18,6 +18,11 @@ const router = createRouter({
       component: Jenisview
     },
     {
+      path: "/paket",
+      name: "paket",
+      component: PaketView
+    },
+    {
       path: "/client",
       name: "client",
       component: ClientView
