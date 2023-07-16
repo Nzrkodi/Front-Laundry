@@ -43,7 +43,7 @@
 								</div>
 								<div class="dataTable-search">
 									<div class="input-group">
-										<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+										<span class="input-group-text" id="basic-addon1"><font-awesome-icon icon="search" /></span>
 										<input class="dataTable-input" placeholder="Search..." type="text" v-model="meta.search"
 											@keyup="() => {meta.page = 1; getPayloadList()}">
 									</div>
