@@ -9,14 +9,14 @@
 					<div class="col-12 col-md-6 order-md-1 order-last">
 						<h4>Tabel Cuci Satuan</h4>
 						<p class="text-subtitle text-primary">
-							Tabel laundry yaitu tabel dimana menampung semua data laundry client
+							Tabel laundry yaitu tabel dimana menampung semua data laundry Pegawai
 						</p>
 					</div>
 					<div class="col-12 col-md-6 order-md-2 order-first">
 						<nav aria-label="breadcrumb" class='breadcrumb-header'>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Table Paket</li>
+								<li class="breadcrumb-item active" aria-current="page">Table</li>
 							</ol>
 						</nav>
 					</div>
@@ -28,7 +28,7 @@
 				<div class="col-12">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="card-title float-start">Data Paket</h4>
+							<h4 class="card-title float-start">Data Cuci Satuan</h4>
 							<BaseButton @event-click="showHideModal" type-button="new-data" class="float-end btn btn-primary btn-sm">Tambah Data</BaseButton>
 						</div>
 						<div class="card-body">
@@ -54,9 +54,10 @@
 									<thead>
 										<tr>
 											<th style="width: 4%;">No</th>
-											<th style="width: 40%;"><a role="button" @click="sortingData(meta.sort, 'nama')"><font-awesome-icon :icon="meta.sortIcon.nama" /> Nama</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'harga')"><font-awesome-icon :icon="meta.sortIcon.harga" /> Harga</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'waktu_kerja')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Dibuat</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'no_regis')"><font-awesome-icon :icon="meta.sortIcon.no_regis" /> Code Regis</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'nama')"><font-awesome-icon :icon="meta.sortIcon.nama" /> Nama</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'alamat')"><font-awesome-icon :icon="meta.sortIcon.alamat" /> Handpone</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'no_hp')"><font-awesome-icon :icon="meta.sortIcon.no_hp" /> Alamat</a></th>
 											<th><a role="button" @click="sortingData(meta.sort, 'created_at')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Dibuat</a></th>
 											<th style="width: 20%;">ACTION</th>
 										</tr>
@@ -64,9 +65,10 @@
 									<TransitionGroup name="table" tag="tbody">
 										<tr v-for="(item, index) in payloadList" :key="index">
 											<td class="text-bold-500">{{ Other.getNumber(index, meta) }}</td>
+											<td>{{ item.no_regis }}</td>
 											<td>{{ item.nama }}</td>
-											<td class="text-bold-500">{{ item.harga }}</td>
-											<td class="text-bold-500">{{ item.waktu_kerja }}</td>
+											<td class="text-bold-500">{{ item.alamat }}</td>
+											<td class="text-bold-500">{{ item.no_hp }}</td>
 											<td>{{ moment(item.created_at).locale('id').format('DD MMMM YYYY') }}</td>
 											<td>
 												<BaseButton :row-data="item" @event-click="setDataToForm" class="btn btn-outline-primary me-3">Edit</BaseButton>
@@ -98,15 +100,15 @@
 			<template v-slot:body>
 				<div class="mx-2 my-4">
 					<div class="form-group">
-						<BaseInput v-model="payload.nama" label="Nama Paket" type="text" :required="true" placeholder="input disini..." />
+						<BaseInput v-model="payload.nama" label="Nama" type="text" :required="true" placeholder="input disini..." />
 					</div>
 
 					<div class="form-group mt-3">
-						<BaseInput v-model.number="payload.harga" label="Harga" type="number" :required="true" placeholder="input disini..." />
+						<BaseInput v-model="payload.alamat" label="Alamat" type="text" :required="true" placeholder="input disini..." />
 					</div>
 
                     <div class="form-group mt-3">
-						<BaseInput v-model="payload.waktu_kerja" label="Waktu kerja" type="text" :required="true" placeholder="input disini..." />
+						<BaseInput v-model="payload.no_hp" label="Handpone" type="text" :required="true" placeholder="input disini..." />
 					</div>
 				</div>
 			</template>
@@ -171,18 +173,19 @@ import myModal from 'bootstrap/js/dist/modal'
 import SideBar from '../skelton/SideBar.vue'
 import NavBar from '../skelton/NavBar.vue'
 import Footer from '../skelton/Footer.vue'
+import Pegawai from '../../utils/Pegawai'
 import Other from '../../utils/Other'
 import moment from 'moment';
 import * as Yup from 'yup'
-import Paket from '../../utils/Paket';
 
 /* GET DATA FUNCTION */
 const payloadList = ref([])
 const meta = reactive({
 	sortIcon: {
-    nama       : 'fa-sort',
-    harga      : 'fa-sort',
-    waktu_kerja      : 'fa-sort',
+    no_regis   : 'fa-sort'   ,
+    nama       : 'fa-sort'   ,
+    alamat     : 'fa-sort'   ,
+    no_hp      : 'fa-sort'   ,
     created_at : 'fa-sort-up'
   },
 	search        : "",
@@ -195,7 +198,7 @@ const meta = reactive({
 })
 
 const getPayloadList = () => {
-	Paket.getAllList(meta)
+	Pegawai.getAllList(meta)
 	.then((res) => {
 		let item = res.data
 		meta.total         = item.meta.total
@@ -210,9 +213,9 @@ const getPayloadList = () => {
 
 /* UPSERT DATA FUNCTION */
 const payload = reactive({
-	nama : '',
-	harga: '',
-	waktu_kerja: ''
+	nama   : '',
+	alamat : '',
+	no_hp  : '',
 })
 
 const errorPayload = ref('');
@@ -224,15 +227,16 @@ const upsertPayload = async () => {
       .required('Field harus diisi')
       .min(2, 'Field minimal terdiri dari 2 karakter')
       .max(150, 'Field maksimal terdiri dari 150 karakter'),
-      harga: Yup.number()
+      alamat: Yup.string()
       .typeError('Field harus bertipe nomor')
       .required('Field harus diisi'),
-      waktu_kerja: Yup.string()
-      .required('Field harus diisi')
+      no_hp: Yup.string()
+      .typeError('Field harus bertipe nomor')
+      .required('Field harus diisi'),
     });
     
     await payloadSchema.validate(payload, { abortEarly: false });
-		Paket.upsert(payload)
+		Pegawai.upsert(payload)
 		.then((res) => {
 			showHideModal()
 			Other.toastSuccess({
@@ -284,7 +288,7 @@ const deleteConfirm = (params) => {
 }
 
 const deletePayload = (dataId) => {
-	Paket.delete(dataId)
+	Pegawai.delete(dataId)
 	.then((res) => {
 		Other.toastSuccess({
 			type : "success",
