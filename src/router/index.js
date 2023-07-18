@@ -5,6 +5,8 @@ import PaketView from '../views/pages/PaketView.vue'
 import ClientView from '../views/pages/ClientView.vue'
 import PegawaiView from '../views/pages/PegawaiView.vue'
 import OrderView from '../views/pages/OrderView.vue'
+import DetailOrderView from '../views/pages/DetailOrder.vue'
+import TransaksiView from '../views/pages/TransaksiView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +40,16 @@ const router = createRouter({
       path: "/order",
       name: "order",
       component: OrderView
+    },
+    {
+      path: "/detail_order/:order_id",
+      name: "detailOrder",
+      component: DetailOrderView
+    },
+    {
+      path: "/transaksi",
+      name: "transaksi",
+      component: TransaksiView
     }
   ]
 })

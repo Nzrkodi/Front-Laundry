@@ -94,7 +94,7 @@
 											<td>
 												<div class="row mx-1">
 													<ul class="list-group list-group-flush">
-														<a role="button" class="link-primary"><font-awesome-icon icon="eye" class="pe-2" />Lihat Detail</a>
+														<router-link :to="{name: 'detailOrder', params: {order_id: item.id}}"><font-awesome-icon class="link-primary pe-2" icon="eye" />Lihat Detail</router-link>
 														<a role="button" class="text-muted" v-for="(list, index2) in item.detail_order">
 															<li class="list-group text-capitalize mt-1">
 																{{ index2 + 1 }}. {{ list.keterangan }} | 

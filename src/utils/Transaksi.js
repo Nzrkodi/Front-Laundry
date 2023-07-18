@@ -1,11 +1,11 @@
 import Main from './Main.js'
 
 const baseurl = import.meta.env.VITE_GATE_SERVICE_URL
-const endPoint = '/laundry/detail_order'
+const endPoint = '/laundry/transaksi'
 
 export default {
   getAllList(params) {
-    return Main(baseurl).get(`${endPoint}?search=${params.search}&limit=${params.limit}&page=${params.page}&orderBy=${params.orderBy}&sort=${params.sort}&order_id=${params.order_id}`)
+    return Main(baseurl).get(`${endPoint}?search=${params.search}&limit=${params.limit}&page=${params.page}&orderBy=${params.orderBy}&sort=${params.sort}`)
   },
 
   upsert(payload) {
