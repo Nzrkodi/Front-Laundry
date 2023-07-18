@@ -25,4 +25,34 @@
     </div>
   </nav>
 </template>
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue';
+import Other from '../../utils/Other';
+
+// Pusher.logToConsole = true;
+
+// const pusher = new Pusher('35f1b0843bf6b5e60bd9', {
+//   cluster: 'ap1'
+// });
+
+const getNotif = () => {
+  // Lakukan subscribe ke channel yang diinginkan
+  const channel = pusher.subscribe('order-notif');
+  
+  // Tangkap event yang diterima dari channel
+  channel.bind('send-notif', (data) => {
+    // Manipulasi data notifikasi sesuai kebutuhan
+    Other.toastSuccess({
+      type  : "success",
+      title : data.message,
+      msg   : "anda memiliki notifikasi"
+    })
+
+    console.log('ini notif', data);
+  });
+}
+
+onMounted(() => {
+  // getNotif();
+});
+</script>

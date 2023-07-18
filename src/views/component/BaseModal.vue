@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" :id="idModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog" :class="mdSize">
       <div class="modal-content">
         <div class="modal-header">
@@ -20,6 +20,10 @@
     mdSize: {
       type   : String,
       default: ''
+    },
+    idModal: {
+      type   : String,
+      default: "myModal"
     }
   })
 </script>

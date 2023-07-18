@@ -2,7 +2,7 @@
   <div id="sidebar" class='active'>
     <div class="sidebar-wrapper active">
       <div class="sidebar-header">
-        <img src="../../assets/images/logo.svg" alt="no logo" srcset="">
+        <img src="../../assets/images/logoku.png" style="transform: scale(1.6);" class="ms-4" alt="no logo" srcset="">
       </div>
       <div class="sidebar-menu">
         <ul class="menu">

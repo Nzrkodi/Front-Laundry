@@ -7,7 +7,7 @@
 			<div class="page-title">
 				<div class="row">
 					<div class="col-12 col-md-6 order-md-1 order-last">
-						<h4>Tabel Cuci Satuan</h4>
+						<h4>Tabel Pegawai</h4>
 						<p class="text-subtitle text-primary">
 							Tabel laundry yaitu tabel dimana menampung semua data laundry Pegawai
 						</p>

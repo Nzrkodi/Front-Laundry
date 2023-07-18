@@ -1,7 +1,7 @@
 import Main from './Main.js'
 
 const baseurl = import.meta.env.VITE_GATE_SERVICE_URL
-const endPoint = '/laundry/order'
+const endPoint = '/laundry/detail_order'
 
 export default {
   getAllList(params) {
@@ -15,11 +15,6 @@ export default {
   getById(id) {
     return Main(baseurl).get(`${endPoint}/${id}`)
   },
-
-  setStatus(id) {
-    return Main(baseurl).get(`/laundry/status/${id}`)
-  },
-
 
   delete(id) {
     return Main(baseurl).delete(`${endPoint}/${id}`)

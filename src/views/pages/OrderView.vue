@@ -84,23 +84,36 @@
 													</div>
 													<div class="col-lg-8">: {{ item.tgl_keluar ? item.tgl_keluar : 'Belum diambil' }}</div>
 												</div>
+												<div class="row mt-2">
+													<div class="col-lg">
+														<strong class="text-muted">Status Bayar</strong>
+													</div>
+													<div class="col-lg-8" :class="item.total_bayar ? 'text-success' : 'text-danger'">: <font-awesome-icon :icon="item.total_bayar ? 'check' : 'xmark'" /> {{ countPrice(item.detail_order) }}</div>
+												</div>
 											</td>
 											<td>
 												<div class="row mx-1">
 													<ul class="list-group list-group-flush">
-														<a role="button" class="link-primary" v-for="(list, index2) in item.detail_order">
+														<a role="button" class="link-primary"><font-awesome-icon icon="eye" class="pe-2" />Lihat Detail</a>
+														<a role="button" class="text-muted" v-for="(list, index2) in item.detail_order">
 															<li class="list-group text-capitalize mt-1">
 																{{ index2 + 1 }}. {{ list.keterangan }} | 
 																status : {{ list.status == 0 ? 'Dalam proses' : list.status == 1 ? 'selesai' : 'dibatalkan' }}
 															</li>
 														</a>
+														<div class="mt-3">
+															<BaseButton v-if="!allStatusOne(item.detail_order)" @event-click="changeStatus" :row-data="item.detail_order" class="btn-sm btn-outline-success" >Cek Selesai</BaseButton>
+														</div>
 													</ul>
 												</div>
 											</td>
 											<td>
-												<BaseButton :row-data="item" @event-click="setDataToForm" class="btn btn-outline-primary me-3">
-													Edit</BaseButton>
-												<BaseButton :data-id="item.id" @event-click="deleteConfirm" class="btn btn-outline-danger">Hapus
+												<BaseButton v-if="!item.total_bayar" @event-click="showHideModalPayment" type-button="new-data" :data-id="item.id" :row-data="{bayar: countPrice(item.detail_order)}" class="btn btn-outline-success me-3">
+													Payment</BaseButton>
+													<BaseButton v-if="item.total_bayar && !item.tgl_keluar" @event-click="editPayload" :data-id="item.id" :disabled="allStatusOne(item.detail_order) ? false : true" type-button="new-data" class="btn btn-info me-3">
+													Ambil</BaseButton>
+													<span class="me-4 fs-6 text-success" v-if="item.tgl_keluar">Diambil</span>
+												<BaseButton @event-click="deletePayload" :data-id="item.id" class="btn btn-outline-danger">Hapus
 												</BaseButton>
 											</td>
 										</tr>
@@ -129,52 +142,60 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</template>
 			<template v-slot:body>
-				<div class="row mt-3">
+				<div class="row mt-3 mb-3">
 					<div class="col-lg-2">
 						<div class="ms-3">
 							<h5>Semua order</h5>
 
 							<ul class="list-group list-group-flush">
-								<a role="button" v-for="item in 5"><li class="list-group mt-3">An item</li></a>
+								<a role="button" v-for="(item, index) in detailOrder" :key="index"><li class="list-group mt-3">
+									<div class="d-flex justify-content-between">
+										<span class="">{{ item.keterangan }}</span>
+										<BaseButton @event-click="deleteFromList" :data-id="index" class="btn-close btn-sm"></BaseButton>
+									</div>
+								</li></a>
 							</ul>
 						</div>
 					</div>
-					<div class="col-lg mt-4">
+					<div class="col-lg">
 						<div class="border-start me-3 rounded ps-5">
 							<div class="d-flex justify-content-between">
 								<h5 class="">Detail Order</h5>
 								<BaseButton class="btn-outline-primary" @event-click="setToDetailOrder" >Tambah</BaseButton>
 							</div>
 							<div class="row" style="margin-top: -15px;">
+								<div class="col-lg-12">
+									<div class="form-group mt-3">
+										<label class="form-label">Klien</label>
+										<select :disabled="detailOrder.length >= 1 ? true : false" v-model="payload.client_id" class="form-select">
+											<option value="0" disabled selected>--pilih--</option>
+											<option v-for="(item, index) in clientList" :key="index" :value="item.id">{{ item.nama }}</option>
+										</select>
+									</div>
+								</div>
 								<div class="col-lg-6">
 									<div class="form-group mt-3">
-										<label class="form-label">Jenis</label>
-										<select v-model="detailPayload.jenis_id" class="form-select">
-											<option value="0" disabled selected>--pilih--</option>
+										<label class="form-label">Jenis Cucian</label>
+										<select v-model.number="detailPayload.jenis_id" class="form-select">
+											<option :value="0" selected>Kiloan</option>
+											<option v-for="(item, index) in jenisList" :key="index" :value="item.id">{{ item.nama }}</option>
 										</select>
 									</div>
 									<div class="form-group mt-3">
-										<label class="form-label">Paket</label>
+										<label class="form-label">Paket Cucian</label>
 										<select v-model="detailPayload.paket_id" class="form-select">
 											<option value="0" disabled selected>--pilih--</option>
+											<option v-for="(item, index) in paketList" :key="index" :value="item.id">{{ item.nama }}</option>
 										</select>
+									</div>
+									<div class="form-group mt-3">
+										<BaseInput :disabled="detailPayload.jenis_id ? true : false" v-model.number="detailPayload.berat" label="Berat" class="mt-2" type="number" placeholder="--input disini--" />
 									</div>
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group mt-3">
-										<BaseInput type="number" v-model.number="detailPayload.berat" label="Berat" placeholder="--input disini--" class="mt-2"/>
-									</div>
-									<div class="form-group mt-3">
-										<label class="form-label">Status</label>
-										<select v-model="detailPayload.status" class="form-select">
-											<option value="0" disabled selected>--pilih--</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-lg-12">
-									<div class="form-group mt-2">
 										<label for="" class="form-label">Keterangan</label>
-										<textarea v-model="detailPayload.keterangan" class="form-control" placeholder="--input disini--" cols="30" rows="10"></textarea>
+										<textarea v-model="detailPayload.keterangan" class="form-control" placeholder="--input disini--" cols="30" rows="9"></textarea>
 									</div>
 								</div>
 							</div>
@@ -184,7 +205,33 @@
 			</template>
 			<template v-slot:footer>
 				<BaseButton class="btn btn-secondary" data-bs-dismiss="modal">Batal</BaseButton>
-				<BaseButton class="btn btn-primary" @event-click="upsertPayload()">Proses</BaseButton>
+				<BaseButton :disabled="detailOrder.length >= 1 ? false : true" class="btn btn-primary" @event-click="upsertPayload('new')">Proses</BaseButton>
+			</template>
+		</BaseModal>
+
+		<BaseModal md-size="modal-lg" id-modal="modalPayment">
+			<template v-slot:header>
+				<h5 class="modal-title" id="exampleModalLabel">Pembayaran</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</template>
+			<template v-slot:body>
+				<div class="row p3">
+					<div class="form-group py-2">
+						<h5>Jumlah Yang Harus Dibayar: {{ paymentInfo }}</h5>
+					</div>
+					<div class="form-group">
+						<BaseInput v-model.number="paymentPayload.t_uang" label="Total Bayar" type="number" class="mt-1" placeholder="--masukan disini--" />
+					</div>
+					<div class="form-group mt-3">
+						<label for="" class="form-label">Keterangan</label>
+						<textarea v-model="paymentPayload.keterangan" cols="30" rows="10" class="form-control" placeholder="--input disini--"></textarea>
+					</div>
+				</div>
+			</template>
+			<template v-slot:footer>
+				<BaseButton class="btn btn-secondary" data-bs-dismiss="modal">Batal</BaseButton>
+				<BaseButton :disabled="paymentPayload.t_uang >= 1 && paymentPayload.keterangan.length >= 1 && parseInt(paymentInfo) <= paymentPayload.t_uang ? false : true" 
+					class="btn btn-primary" @event-click="insertPayment()">Proses</BaseButton>
 			</template>
 		</BaseModal>
 
@@ -243,9 +290,13 @@ import myModal from 'bootstrap/js/dist/modal'
 import SideBar from '../skelton/SideBar.vue'
 import NavBar from '../skelton/NavBar.vue'
 import Footer from '../skelton/Footer.vue'
+import Payment from '../../utils/Payment'
+import Client from '../../utils/Client'
 import Jenis from '../../utils/Jenis'
+import Paket from '../../utils/Paket'
 import Other from '../../utils/Other'
 import Order from '../../utils/Order'
+import Detail from '../../utils/Detail'
 import moment from 'moment';
 import * as Yup from 'yup'
 
@@ -292,44 +343,61 @@ const detailPayload = reactive({
 })
 
 const setToDetailOrder = () => {
-	detailOrder.value.push(detailPayload)
-	for (const key in detailPayload) {
-		if (typeof detailPayload[key] == 'string') {
-			detailPayload[key] = ""
-		} else if (typeof detailPayload[key] == 'number') {
-			detailPayload[key] = 0
-		}
-	}
+	detailOrder.value.push({
+		jenis_id: detailPayload.jenis_id,
+		paket_id: detailPayload.paket_id,
+		berat: detailPayload.berat,
+		status: detailPayload.status,
+		keterangan: detailPayload.keterangan
+	})
 }
 
-/* UPSERT DATA FUNCTION */
-const payload = reactive({
-	nama: '',
-	harga: ''
+const deleteFromList = (params) => {
+	let dataId = params.dataId
+
+	detailOrder.value.splice(dataId, 1)
+}
+
+/* GET JENIS FUNCTION */
+const jenisList = ref([])
+const jenisMeta = reactive({
+	search        : "",
+	limit         : 100,
+	page          : 1,
+	total         : 1,
+	total_in_page : 0,
+	sort          : "desc",
+	orderBy       : "created_at"
 })
 
-const errorPayload = ref('');
+const getJenis = () => {
+	Jenis.getAllList(jenisMeta)
+	.then((res) => {
+		let item = res.data
+		jenisMeta.total         = item.meta.total
+		jenisMeta.total_in_page = item.meta.total_in_page
 
-const upsertPayload = async () => {
-	try {
-		const payloadSchema = Yup.object().shape({
-			nama: Yup.string()
-				.required('Field harus diisi')
-				.min(2, 'Field minimal terdiri dari 2 karakter')
-				.max(150, 'Field maksimal terdiri dari 150 karakter'),
-			harga: Yup.number()
-				.typeError('Field harus bertipe nomor')
-				.required('Field harus diisi'),
-		});
+		jenisList.value = item.data
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+}
 
-		await payloadSchema.validate(payload, { abortEarly: false });
-		Jenis.upsert(payload)
+const editPayload = (params) => {
+	let dataId = params.dataId
+
+	Other.sweetAlertQuestion({
+		title: "Ambil Order",
+		msg: "Ambil orderan sekarang?",
+		confirmMsg: "Ambil",
+		callback: () => {
+			Order.setStatus(dataId)
 			.then((res) => {
-				showHideModal()
 				Other.toastSuccess({
-					type: "success",
+					type : "success",
 					title: "Berhasil",
-					msg: "Data berhasil diproses!"
+					msg  : "Order telah diambil!"
 				})
 
 				getPayloadList()
@@ -337,72 +405,222 @@ const upsertPayload = async () => {
 			.catch((err) => {
 				console.log(err);
 			})
-
-	} catch (error) {
-		const errorMessages = err.inner.reduce((errors, error) => {
-			errors[error.path] = error.message;
-			return errors;
-		}, {});
-		errorPayload.value = errorMessages;
-	}
-}
-
-/* UPSERT DATA FUNCTION */
-
-const setDataToForm = (params) => {
-	let data = params.rowData
-
-	for (const key in payload) {
-		if (key == "created_at" && key == "updated_at") {
-			continue
 		}
-		payload[key] = data[key]
-	}
-	payload.id = data.id
-	showHideModal()
-}
-
-/* DELETE DATA FUNCTION */
-const deleteConfirm = (params) => {
-	let dataId = params.dataId
-
-	Other.sweetAlertQuestion({
-		title: "Hapus?",
-		msg: "Anda tidak dapat memulihkan data setelah dihapus",
-		confirmMsg: "Hapus",
-		callback: () => { deletePayload(dataId) }
 	})
 }
 
-const deletePayload = (dataId) => {
-	Jenis.delete(dataId)
-		.then((res) => {
-			Other.toastSuccess({
-				type: "success",
-				title: "Berhasil",
-				msg: "Data berhasil diproses!"
-			})
+/* UPSERT ORDER FUNCTION */
+const payload = reactive({
+	client_id    : 0,
+	pegawai_id   : 1,
+	detail_order : []
+})
 
-			getPayloadList()
+const upsertPayload = (params) => {
+	payload.detail_order = detailOrder.value
+
+	Order.upsert(payload)
+	.then((res) => {
+		Other.toastSuccess({
+			type : "success",
+			title: "Berhasil",
+			msg  : "Data berhasil diproses!"
 		})
-		.catch((err) => {
-			console.log(err);
+
+		if (params == 'new') {
+			showHideModal()
+		}
+		getPayloadList()
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+}
+
+const deletePayload = (params) => {
+	Other.sweetAlertQuestion({
+		title      : "Hapus?",
+		msg        : "Anda tidak dapat memulihkan data setelah dihapus",
+		confirmMsg : "Hapus",
+		callback   : () => {
+			Order.delete(params.dataId)
+			.then((res) => {
+				Other.toastSuccess({
+					type : "success",
+					title: "Berhasil",
+					msg  : "Data berhasil dihapus!"
+				})
+
+				getPayloadList()
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+		}
+	})
+}
+
+/* UPSERT PAYMENT FUNCTION */
+const paymentInfo = ref("")
+
+const paymentPayload = reactive({
+	order_id  : 0,
+	t_uang    : 0,
+	status    : "Sudah Bayar",
+	keterangan: ""
+})
+
+const insertPayment = () => {
+	Payment.upsert(paymentPayload)
+	.then((res) => {
+		showHideModalPayment()
+
+		paymentPayload.t_uang = ""
+		paymentPayload.keterangan = ""
+
+		Other.toastSuccess({
+			type : "success",
+			title: "Berhasil",
+			msg  : "Pembayaran berhasil!"
 		})
+
+		getPayloadList()
+	})
+	.then((err) => {
+		console.log(err);
+	})
+}
+
+const allStatusOne = (array) => {
+	return array.every(item => item.status == "1")
+};
+
+const statusPayload = reactive({
+	id        : 0,
+	order_id  : 0,
+	jenis_id  : 0,
+	paket_id  : 0,
+	berat     : 20,
+	harga     : 20000,
+	status    : "1",
+	keterangan: ""
+})
+
+const changeStatus = (params) => {
+	let rowData = params.rowData
+
+	Other.sweetAlertQuestion({
+		title: "Konfirmasi selesai?",
+		msg: "Konfirmasi pencucian telah selesai",
+		confirmMsg: "Selesai",
+		callback: () => {
+			for (const key in rowData) {
+				for (const item in rowData[key]) {
+					if (item == 'created_at' || item == 'updated_at' || item == 'status') {
+						continue
+					}
+					statusPayload[item] = rowData[key][item]
+				}
+				Detail.upsert(statusPayload)
+				.then((res) => {
+					Other.toastSuccess({
+						type : "success",
+						title: "Berhasil",
+						msg  : "Update berhasil!"
+					})
+
+					getPayloadList()
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+			}
+		}
+	})
+}
+
+/* GET PAKET FUNCTION */
+const paketList = ref([])
+const paketMeta = reactive({
+	search        : "",
+	limit         : 100,
+	page          : 1,
+	total         : 1,
+	total_in_page : 0,
+	sort          : "desc",
+	orderBy       : "created_at"
+})
+
+const getPaket = () => {
+	Paket.getAllList(paketMeta)
+	.then((res) => {
+		let item = res.data
+		paketMeta.total         = item.meta.total
+		paketMeta.total_in_page = item.meta.total_in_page
+
+		paketList.value = item.data
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+}
+
+/* GET CLIENT FUNCTION */
+const clientList = ref([])
+const clientMeta = reactive({
+	search        : "",
+	limit         : 100,
+	page          : 1,
+	total         : 1,
+	total_in_page : 0,
+	sort          : "desc",
+	orderBy       : "created_at"
+})
+
+const getClient = () => {
+	Client.getAllList(clientMeta)
+	.then((res) => {
+		let item = res.data
+		clientMeta.total         = item.meta.total
+		clientMeta.total_in_page = item.meta.total_in_page
+
+		clientList.value = item.data
+	})
+	.catch((err) => {
+		console.log(err);
+	})
 }
 
 /* ANOTHER FUNCTION */
+const countPrice = (arr) => {
+	return arr.reduce((accumulator, item) => accumulator + item.harga, 0);
+}
+
 const paggination = (data) => {
 	meta.page = data.n_page
 	getPayloadList()
 }
 
-const modal = ref(null)
+const modal        = ref(null)
+const modalPayment = ref(null)
 
 const showHideModal = (params) => {
 	if (params && params.typeButton == 'new-data') {
 		clearInput()
 	}
 	modal.value.show() ? modal.value.show() : modal.value.hide()
+}
+
+const showHideModalPayment = (params) => {
+	
+	if (params && params.typeButton == 'new-data') {
+		// clearInput()
+		paymentInfo.value       = params.rowData.bayar
+		paymentPayload.order_id = params.dataId
+	}
+
+
+	modalPayment.value.show() ? modalPayment.value.show() : modalPayment.value.hide()
 }
 
 const sortingData = (sort, by) => {
@@ -428,13 +646,29 @@ const sortingData = (sort, by) => {
 
 const clearInput = () => {
 	for (const key in payload) {
+		if (key == "pegawai_id") {
+			continue
+		}
+
 		if (typeof payload[key] == "string") {
 			payload[key] = ''
 		} else if (typeof payload[key] == "number") {
 			payload[key] = 0
 		}
 
+		payload.detail_order = []
+		detailOrder.value = []
+
 		delete payload.id
+		delete payload.tgl_keluar
+	}
+
+	for (const key in detailPayload) {
+		if (typeof detailPayload[key] == "string") {
+			detailPayload[key] = ''
+		} else if (typeof detailPayload[key] == "number") {
+			detailPayload[key] = 0
+		}
 	}
 }
 
@@ -443,6 +677,13 @@ onMounted(() => {
 		keyboard: false
 	})
 
+	modalPayment.value = new myModal('#modalPayment', {
+		keyboard: false
+	})
+
 	getPayloadList()
+	getJenis()
+	getPaket()
+	getClient()
 })
 </script>
