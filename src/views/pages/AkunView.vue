@@ -109,23 +109,32 @@
                     <div class="form-group">
                         <BaseInput v-model="payload.nama" label="Nama" type="text" :required="true"
                             placeholder="input disini..." />
+                        <small class="text-danger">
+                            {{ errorPayload.nama }}
+                        </small>
                     </div>
 
                     <div class="form-group mt-3">
                         <BaseInput v-model="payload.email" label="Email" type="text" :required="true"
                             placeholder="input disini..." />
+                        <small class="text-danger">
+                            {{ errorPayload.email }}
+                        </small>
                     </div>
 
                     <div class="form-group mt-3">
                         <BaseInput v-model="payload.password" label="Password" type="password" :required="true"
                             placeholder="input disini..." />
+                        <small class="text-danger">
+                            {{ errorPayload.password }}
+                        </small>
                     </div>
                     <div class="form-group mt-3">
                         <select v-model="payload.scope" class="form-select">
                             <option value="" selected disabled>-- Pilih --</option>
-                            <option value="client">Client</option>
-                            <option value="pegawai">Pegawai</option>
-                            <option value="admin">Admin</option>
+                            <option value="order-only">Client</option>
+                            <option value="see-list">Pegawai</option>
+                            <option value="crud-list">Admin</option>
                         </select>
                     </div>
                 </div>
@@ -265,10 +274,14 @@ const upsertPayload = async () => {
                 getPayloadList()
             })
             .catch((err) => {
-                console.log(err);
+                Other.toastSuccess({
+                    type: "error",
+                    title: "Ada kesalahan sistem",
+                    msg: "Server sedang maintenance"
+                })
             })
 
-    } catch (error) {
+    } catch (err) {
         const errorMessages = err.inner.reduce((errors, error) => {
             errors[error.path] = error.message;
             return errors;
@@ -366,6 +379,7 @@ const clearInput = () => {
 
         delete payload.id
     }
+    errorPayload.value = ''
 }
 
 onMounted(() => {
