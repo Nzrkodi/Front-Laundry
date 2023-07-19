@@ -97,10 +97,16 @@
 				<div class="mx-2 my-4">
 					<div class="form-group">
 						<BaseInput v-model="payload.nama" label="Nama Jenis" type="text" :required="true" placeholder="input disini..." />
+						<small class="text-danger">
+							{{ errorPayload.nama }}
+						</small>
 					</div>
 
 					<div class="form-group mt-3">
 						<BaseInput v-model.number="payload.harga" label="Harga" type="number" :required="true" placeholder="input disini..." />
+						<small class="text-danger">
+							{{ errorPayload.harga }}
+						</small>
 					</div>
 				</div>
 			</template>
@@ -197,7 +203,11 @@ const getPayloadList = () => {
 		payloadList.value = item.data
 	})
 	.catch((err) => {
-		console.log(err);
+		Other.toastSuccess({
+			type : "error"                    ,
+			title: "Ada kesalahan sistem"     ,
+			msg  : "Server sedang maintenance"
+		})
 	})
 }
 
@@ -234,10 +244,14 @@ const upsertPayload = async () => {
 			getPayloadList()
 		})
     .catch((err) => {
-			console.log(err);
+			Other.toastSuccess({
+				type : "error"                    ,
+				title: "Ada kesalahan sistem"     ,
+				msg  : "Server sedang maintenance"
+			})
 		})
 		
-	} catch (error) {
+	} catch (err) {
 		const errorMessages = err.inner.reduce((errors, error) => {
       errors[error.path] = error.message;
       return errors;
@@ -285,7 +299,11 @@ const deletePayload = (dataId) => {
 		getPayloadList()
 	})
 	.catch((err) => {
-		console.log(err);
+		Other.toastSuccess({
+				type : "error"                    ,
+				title: "Ada kesalahan sistem"     ,
+				msg  : "Server sedang maintenance"
+			})
 	})
 }
 
