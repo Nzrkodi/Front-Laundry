@@ -1,7 +1,27 @@
 import iziToast from "izitoast";
 import Swal from "sweetalert2";
+import CryptoJS from "crypto-js";
+import { useRouter } from "vue-router";
+
+const envSctructure = {
+  production:'production',
+  staging:'staging',
+  development:'development',
+  local:'local',
+  prod:'production',
+  stg:'staging',
+  dev:'development',
+  prd:'production',
+  loc:'local'
+}
+
+const router = useRouter()
 
 export default{
+  envTransform(env) {
+    return envSctructure[env]
+  },
+
   getRange(meta){
     let page = meta.page || 1;
     let limit = meta.limit || 10;
@@ -74,5 +94,49 @@ export default{
         opt.callback()
       }
     })
+  },
+
+  encryptScope(scope){
+    let token = scope
+    let tokenEncrypt = CryptoJS.AES.encrypt(
+      token,
+      import.meta.env.VITE_ENCRYPT_KEY
+    ).toString();
+    localStorage.setItem("scope", tokenEncrypt)
+  },
+
+  getDecryptScope(){
+    let tokenEncrypt = localStorage.getItem("scope")
+    let tokenDecrypt = CryptoJS.AES.decrypt(
+      tokenEncrypt,
+      import.meta.env.VITE_ENCRYPT_KEY
+    ).toString(CryptoJS.enc.Utf8)
+
+    return tokenDecrypt
+  },
+
+  tokenConfig(){
+    const userToken = localStorage.getItem("token")
+    return {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    }
+  },
+
+  checkIfLogin(status){
+    if (status == 401) {
+      localStorage.clear()
+
+      this.toastSuccess({
+        type: "warning",
+        title: "Sesi login telah berakhir",
+        msg: "Login kembali untuk masul"
+      })
+
+      return true
+    } else {
+      return false
+    }
   }
 }
