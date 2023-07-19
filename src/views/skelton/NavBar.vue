@@ -29,11 +29,11 @@
 import { onMounted } from 'vue';
 import Other from '../../utils/Other';
 
-Pusher.logToConsole = true;
+// Pusher.logToConsole = true;
 
-const pusher = new Pusher('35f1b0843bf6b5e60bd9', {
-  cluster: 'ap1'
-});
+// const pusher = new Pusher('35f1b0843bf6b5e60bd9', {
+//   cluster: 'ap1'
+// });
 
 const getNotif = () => {
   // Lakukan subscribe ke channel yang diinginkan
@@ -53,6 +53,6 @@ const getNotif = () => {
 }
 
 onMounted(() => {
-  getNotif();
+  // getNotif();
 });
 </script>
