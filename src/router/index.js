@@ -7,6 +7,7 @@ import PegawaiView from '../views/pages/PegawaiView.vue'
 import OrderView from '../views/pages/OrderView.vue'
 import DetailOrderView from '../views/pages/DetailOrder.vue'
 import TransaksiView from '../views/pages/TransaksiView.vue'
+import AkunView from '../views/pages/AkunView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,11 @@ const router = createRouter({
       path: "/transaksi",
       name: "transaksi",
       component: TransaksiView
+    },
+    {
+      path: "/akun",
+      name: "akun",
+      component: AkunView
     }
   ]
 })
