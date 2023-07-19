@@ -7,29 +7,29 @@
       <div class="sidebar-menu">
         <ul class="menu">
           <li class="sidebar-title">Home</li>
-          <li class="sidebar-item active">
+          <li class="sidebar-item" :class="currentRoute == 'home' ? 'active' : ''">
             <router-link :to="{ name: 'home' }" class="sidebar-link">
               <span>Dashboard</span>
             </router-link>
 
           </li>
           <li class="sidebar-title">Data</li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" :class="currentRoute == 'order' ? 'active' : ''">
             <router-link :to="{ name: 'order' }" class="sidebar-link">
               <span>Order</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" :class="currentRoute == 'transaksi' ? 'active' : ''">
             <router-link :to="{ name: 'transaksi' }" class="sidebar-link">
               <span>Transaksi</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" :class="currentRoute == 'jenis' ? 'active' : ''">
             <router-link :to="{ name: 'jenis' }" class="sidebar-link">
               <span>Jenis</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" :class="currentRoute == 'paket' ? 'active' : ''">
             <router-link :to="{ name: 'paket' }" class="sidebar-link">
               <span>Paket</span>
             </router-link>
@@ -52,5 +52,7 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 
+const currentRoute = useRouter().currentRoute.value.name
 </script>

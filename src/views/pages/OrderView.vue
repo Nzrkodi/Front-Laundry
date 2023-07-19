@@ -464,10 +464,11 @@ const deletePayload = (params) => {
 const paymentInfo = ref("")
 
 const paymentPayload = reactive({
-	order_id  : 0,
-	t_uang    : 0,
-	status    : "Sudah Bayar",
-	keterangan: ""
+	order_id   : 0,
+	t_uang     : 0,
+	pegawai_id : null,
+	status     : "Sudah Bayar",
+	keterangan : ""
 })
 
 const insertPayment = () => {

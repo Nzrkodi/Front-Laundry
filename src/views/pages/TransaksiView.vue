@@ -29,6 +29,8 @@
 					<div class="card">
 						<div class="card-header">
 							<h4 class="card-title float-start">Data Transaksi</h4>
+							<BaseButton @event-click="showHideModalReport" type-button="new-data" class="float-end btn btn-primary btn-sm">
+								<font-awesome-icon icon="download" class="me-2" />Download Laporan</BaseButton>
 						</div>
 						<div class="card-body">
 							<div class="dataTable-top d-flex justify-content-between mb-2">
@@ -53,11 +55,11 @@
 									<thead>
 										<tr>
 											<th style="width: 4%;">No</th>
-											<th style="width: 20%;"><a role="button" @click="sortingData(meta.sort, 'nama')"><font-awesome-icon :icon="meta.sortIcon.nama" /> Code Resi</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'harga')"><font-awesome-icon :icon="meta.sortIcon.harga" /> Total Uang</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'created_at')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Total Harga</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'created_at')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Total Kembali</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'created_at')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Status</a></th>
+											<th style="width: 20%;"><a role="button" @click="sortingData(meta.sort, 'nama')">Code Resi</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'harga')">Total Uang</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'created_at')">Total Harga</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'created_at')">Total Kembali</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'created_at')">Status</a></th>
 											<th style="width: 20%;">ACTION</th>
 										</tr>
 									</thead>
@@ -110,6 +112,39 @@
 			<template v-slot:footer>
 				<BaseButton class="btn btn-secondary" data-bs-dismiss="modal">Batal</BaseButton>
 				<BaseButton class="btn btn-primary" @event-click="upsertPayload()">Proses</BaseButton>
+			</template>
+		</BaseModal>
+
+		<BaseModal md-size="modal-lg" id="modalReport" >
+			<template v-slot:header>
+				<h5 class="modal-title" id="exampleModalLabel">Ambil Berdasarkan Range Bulan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</template>
+			<template v-slot:body>
+				<div class="mx-2 my-4">
+					<div class="form-group">
+						<label for="">Tahun</label>
+						<input type="number" v-model.number="reportPayload.year" class="form-control" min="1900" max="2100" placeholder="--masukan tahun--">
+					</div>
+					<div class="row mt-2">
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label for="">Bulan Awal</label>
+								<input type="number" v-model.number="reportPayload.start_month" class="form-control" min="1" max="31" placeholder="--masukan awal bulan--">
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label for="">Bulan Akhir</label>
+								<input type="number" v-model="reportPayload.end_month" class="form-control" min="1" max="31" placeholder="--masukan akhir bulan--">
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<template v-slot:footer>
+				<BaseButton class="btn btn-secondary" data-bs-dismiss="modal">Batal</BaseButton>
+				<BaseButton class="btn btn-primary" @event-click="getReportPayload" >Proses</BaseButton>
 			</template>
 		</BaseModal>
 
@@ -172,6 +207,8 @@ import Transaksi from '../../utils/Transaksi'
 import Other from '../../utils/Other'
 import moment from 'moment';
 import * as Yup from 'yup'
+import Eksport from "../../utils/Eksport"
+import ReportList from "../../utils/ReportList"
 
 /* GET DATA FUNCTION */
 const payloadList = ref([])
@@ -299,6 +336,29 @@ const deletePayload = (dataId) => {
 	})
 }
 
+/* REPORT FUNCTION */
+const reportPayload = reactive({
+	year: 2023,
+	start_month: 1,
+	end_month: 7
+})
+
+const getReportPayload = () => {
+	ReportList.getAllList(reportPayload)
+	.then((res) => {
+		let data = res.data
+		console.log(res);
+		getReport(data.data)
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+}
+
+const getReport = (data) => {
+	Eksport.transaksi(data)
+}
+
 /* ANOTHER FUNCTION */
 const paggination = (data) => {
   meta.page = data.n_page
@@ -312,6 +372,15 @@ const showHideModal = (params) => {
 		clearInput()
 	}
 	modal.value.show() ? modal.value.show() : modal.value.hide()
+}
+
+const modalReport = ref(null)
+
+const showHideModalReport = (params) => {
+	if (params && params.typeButton == 'new-data') {
+		clearInput()
+	}
+	modalReport.value.show() ? modalReport.value.show() : modalReport.value.hide()
 }
 
 const sortingData = (sort, by) => {
@@ -349,6 +418,10 @@ const clearInput = () => {
 
 onMounted(() => {
 	modal.value = new myModal('#myModal', {
+		keyboard:false
+	})
+
+	modalReport.value = new myModal('#modalReport', {
 		keyboard:false
 	})
 
