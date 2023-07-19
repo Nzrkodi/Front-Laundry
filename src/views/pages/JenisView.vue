@@ -175,7 +175,9 @@ import Jenis from '../../utils/Jenis'
 import Other from '../../utils/Other'
 import moment from 'moment';
 import * as Yup from 'yup'
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 /* GET DATA FUNCTION */
 const payloadList = ref([])
 const meta = reactive({
@@ -203,11 +205,18 @@ const getPayloadList = () => {
 		payloadList.value = item.data
 	})
 	.catch((err) => {
-		Other.toastSuccess({
-			type : "error"                    ,
-			title: "Ada kesalahan sistem"     ,
-			msg  : "Server sedang maintenance"
-		})
+		if (err.response) {
+			let status = Other.checkIfLogin(err.response.status)
+			if (status) {
+				router.replace('/')
+			}
+		} else {
+			Other.toastSuccess({
+				type : "error"                    ,
+				title: "Ada kesalahan sistem"     ,
+				msg  : "Server sedang maintenance"
+			})
+		}
 	})
 }
 
