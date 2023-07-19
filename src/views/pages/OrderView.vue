@@ -299,6 +299,7 @@ import Order from '../../utils/Order'
 import Detail from '../../utils/Detail'
 import moment from 'moment';
 import * as Yup from 'yup'
+import Norif from '../../utils/Norif';
 
 /* GET DATA FUNCTION */
 const payloadList = ref([])
@@ -485,6 +486,8 @@ const insertPayment = () => {
 			msg  : "Pembayaran berhasil!"
 		})
 
+		Norif.sendNotif("Pembayaran diterima")
+
 		getPayloadList()
 	})
 	.then((err) => {
@@ -536,6 +539,8 @@ const changeStatus = (params) => {
 					console.log(err);
 				})
 			}
+
+			Norif.sendNotif("Cucian anda telah selesai")
 		}
 	})
 }
