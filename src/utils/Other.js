@@ -96,8 +96,8 @@ export default{
     })
   },
 
-  encryptScope(scope){
-    let token = scope
+  encryptScope(scope, id){
+    let token = `${scope}:${id}`
     let tokenEncrypt = CryptoJS.AES.encrypt(
       token,
       import.meta.env.VITE_ENCRYPT_KEY

@@ -27,9 +27,9 @@ const envGuard = (to, from, next) => {
 
 const scopeGuard = (to, from, next) => {
   let scope = Other.getDecryptScope();
-  if (scope == "see-list") {
+  if (scope.split(":")[0] == "see-list") {
     next("/");
-  } else if (scope == "crud-list") {
+  } else if (scope.split(":")[0] == "crud-list") {
     next();
   }
 };

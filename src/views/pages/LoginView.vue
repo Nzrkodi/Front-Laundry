@@ -88,10 +88,10 @@ const getScope = async () => {
 
     Auth.getScope(userPayload)
     .then((res) => {
-      let scope = res.data.data
-      userPayload.scope = scope
+      let data = res.data.data
+      userPayload.scope = data.scope
 
-      Other.encryptScope(scope)
+      Other.encryptScope(data.scope, data.id)
       getToken()
     })
     .catch((err) => {
