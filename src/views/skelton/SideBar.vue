@@ -9,6 +9,7 @@
           <li class="sidebar-title">Home</li>
           <li class="sidebar-item active">
             <router-link :to="{ name: 'home' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'house']" />
               <span>Dashboard</span>
             </router-link>
 
@@ -16,34 +17,46 @@
           <li class="sidebar-title">Data</li>
           <li class="sidebar-item">
             <router-link :to="{ name: 'order' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'cart-shopping']" />
               <span>Order</span>
             </router-link>
           </li>
           <li class="sidebar-item">
             <router-link :to="{ name: 'transaksi' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'cash-register']" />
               <span>Transaksi</span>
             </router-link>
           </li>
           <li class="sidebar-item">
+            <router-link :to="{ name: 'client' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'users']" />
+              <span>Client</span>
+            </router-link>
+          </li>
+          <li class="sidebar-item">
+            <router-link :to="{ name: 'pegawai' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'users']" />
+              <span>Pegawai</span>
+            </router-link>
+          </li>
+          <li class="sidebar-item">
             <router-link :to="{ name: 'jenis' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'folder']" />
               <span>Jenis</span>
             </router-link>
           </li>
           <li class="sidebar-item">
             <router-link :to="{ name: 'paket' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'folder']" />
               <span>Paket</span>
             </router-link>
           </li>
-          <li class="sidebar-title">Setup</li>
+          <li class="sidebar-title">Mnage akun</li>
           <li class="sidebar-item">
-            <a href="table.html" class="sidebar-link">
-              <span>Report</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a href="table.html" class="sidebar-link">
-              <span>Manage Akun</span>
-            </a>
+            <router-link :to="{ name: 'akun' }" class="sidebar-link">
+              <font-awesome-icon :icon="['fas', 'user']" />
+              <span>Akun</span>
+            </router-link>
           </li>
         </ul>
       </div>
