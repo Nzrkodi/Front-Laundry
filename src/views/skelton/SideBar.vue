@@ -33,26 +33,26 @@
               <span>Client</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li v-show="scope == 'crud-list'" class="sidebar-item">
             <router-link :to="{ name: 'pegawai' }" class="sidebar-link">
               <font-awesome-icon :icon="['fas', 'users']" />
               <span>Pegawai</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li v-show="scope == 'crud-list'" class="sidebar-item">
             <router-link :to="{ name: 'jenis' }" class="sidebar-link">
               <font-awesome-icon :icon="['fas', 'folder']" />
               <span>Jenis</span>
             </router-link>
           </li>
-          <li class="sidebar-item" :class="currentRoute == 'paket' ? 'active' : ''">
+          <li v-show="scope == 'crud-list'" class="sidebar-item" :class="currentRoute == 'paket' ? 'active' : ''">
             <router-link :to="{ name: 'paket' }" class="sidebar-link">
               <font-awesome-icon :icon="['fas', 'folder']" />
               <span>Paket</span>
             </router-link>
           </li>
-          <li class="sidebar-title">Mnage akun</li>
-          <li class="sidebar-item">
+          <li v-show="scope == 'crud-list'" class="sidebar-title">Manage akun</li>
+          <li v-show="scope == 'crud-list'" class="sidebar-item">
             <router-link :to="{ name: 'akun' }" class="sidebar-link">
               <font-awesome-icon :icon="['fas', 'user']" />
               <span>Akun</span>
@@ -65,7 +65,15 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
+import Other from '../../utils/Other';
 
 const currentRoute = useRouter().currentRoute.value.name
+const scope = ref('')
+
+onMounted(() => {
+  let splitScope = Other.getDecryptScope();
+  scope.value = splitScope.split(":")[0] 
+})
 </script>

@@ -91,8 +91,12 @@ const getScope = async () => {
       let data = res.data.data
       userPayload.scope = data.scope
 
-      Other.encryptScope(data.scope, data.id)
-      getToken()
+      if (data.scope != "order-only") {
+        Other.encryptScope(data.scope, data.id)
+        getToken()
+      } else {
+        errMessage.value = true
+      }
     })
     .catch((err) => {
       console.log(err);
