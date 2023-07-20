@@ -15,8 +15,6 @@ const envSctructure = {
   loc:'local'
 }
 
-const router = useRouter()
-
 export default{
   envTransform(env) {
     return envSctructure[env]
