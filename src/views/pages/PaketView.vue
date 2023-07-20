@@ -29,12 +29,14 @@
 					<div class="card">
 						<div class="card-header">
 							<h4 class="card-title float-start">Data Paket</h4>
-							<BaseButton @event-click="showHideModal" type-button="new-data" class="float-end btn btn-primary btn-sm">Tambah Data</BaseButton>
+							<BaseButton @event-click="showHideModal" type-button="new-data"
+								class="float-end btn btn-primary btn-sm">Tambah Data</BaseButton>
 						</div>
 						<div class="card-body">
 							<div class="dataTable-top d-flex justify-content-between mb-2">
 								<div class="dataTable-dropdown">
-									<select class="dataTable-selector form-select" v-model.number="meta.limit" @change="() => {meta.page = 1; getPayloadList();}">
+									<select class="dataTable-selector form-select" v-model.number="meta.limit"
+										@change="() => { meta.page = 1; getPayloadList(); }">
 										<option value="10">10</option>
 										<option value="15">15</option>
 										<option value="20">20</option>
@@ -44,8 +46,8 @@
 								<div class="dataTable-search">
 									<div class="input-group">
 										<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
-										<input class="dataTable-input" placeholder="Search..." type="text" v-model="meta.search"
-											@keyup="() => {meta.page = 1; getPayloadList()}">
+										<input class="dataTable-input" placeholder="Search..." type="text"
+											v-model="meta.search" @keyup="() => { meta.page = 1; getPayloadList() }">
 									</div>
 								</div>
 							</div>
@@ -54,10 +56,17 @@
 									<thead>
 										<tr>
 											<th style="width: 4%;">No</th>
-											<th style="width: 40%;"><a role="button" @click="sortingData(meta.sort, 'nama')"><font-awesome-icon :icon="meta.sortIcon.nama" /> Nama</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'harga')"><font-awesome-icon :icon="meta.sortIcon.harga" /> Harga</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'waktu_kerja')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Dibuat</a></th>
-											<th><a role="button" @click="sortingData(meta.sort, 'created_at')"><font-awesome-icon :icon="meta.sortIcon.created_at" /> Dibuat</a></th>
+											<th style="width: 40%;"><a role="button"
+													@click="sortingData(meta.sort, 'nama')"><font-awesome-icon
+														:icon="meta.sortIcon.nama" /> Nama</a></th>
+											<th><a role="button" @click="sortingData(meta.sort, 'harga')"><font-awesome-icon
+														:icon="meta.sortIcon.harga" /> Harga</a></th>
+											<th><a role="button"
+													@click="sortingData(meta.sort, 'waktu_kerja')"><font-awesome-icon
+														:icon="meta.sortIcon.created_at" /> Dibuat</a></th>
+											<th><a role="button"
+													@click="sortingData(meta.sort, 'created_at')"><font-awesome-icon
+														:icon="meta.sortIcon.created_at" /> Dibuat</a></th>
 											<th style="width: 20%;">ACTION</th>
 										</tr>
 									</thead>
@@ -69,20 +78,24 @@
 											<td class="text-bold-500">{{ item.waktu_kerja }}</td>
 											<td>{{ moment(item.created_at).locale('id').format('DD MMMM YYYY') }}</td>
 											<td>
-												<BaseButton :row-data="item" @event-click="setDataToForm" class="btn btn-outline-primary me-3">Edit</BaseButton>
-												<BaseButton :data-id="item.id" @event-click="deleteConfirm" class="btn btn-outline-danger">Hapus</BaseButton>
+												<BaseButton :row-data="item" @event-click="setDataToForm"
+													class="btn btn-outline-primary me-3">Edit</BaseButton>
+												<BaseButton :data-id="item.id" @event-click="deleteConfirm"
+													class="btn btn-outline-danger">Hapus</BaseButton>
 											</td>
 										</tr>
 									</TransitionGroup>
 								</table>
-								<TransitionGroup name="defend" tag="div" class="d-flex justify-content-center" >
-									<h5 class="text-muted py-3" v-if="meta.total === 0 && meta.search.length === 0">Belum ada data dalam tabel ini!</h5>
-									<h5 class="text-muted py-3" v-if="meta.total_in_page === 0 && meta.search.length >= 1">Data tidak ditemukan!</h5>
+								<TransitionGroup name="defend" tag="div" class="d-flex justify-content-center">
+									<h5 class="text-muted py-3" v-if="meta.total === 0 && meta.search.length === 0">Belum
+										ada data dalam tabel ini!</h5>
+									<h5 class="text-muted py-3" v-if="meta.total_in_page === 0 && meta.search.length >= 1">
+										Data tidak ditemukan!</h5>
 								</TransitionGroup>
 							</div>
 							<Transition>
-								<Paggination v-show="meta.search.length <= 0 && meta.total > meta.limit" :page="meta.page" :total="meta.total" :limit="meta.limit"
-									@event-click="paggination" />
+								<Paggination v-show="meta.search.length <= 0 && meta.total > meta.limit" :page="meta.page"
+									:total="meta.total" :limit="meta.limit" @event-click="paggination" />
 							</Transition>
 						</div>
 					</div>
@@ -90,23 +103,35 @@
 			</div>
 		</div>
 
-		<BaseModal md-size="modal-lg" >
+		<BaseModal md-size="modal-lg">
 			<template v-slot:header>
 				<h5 class="modal-title" id="exampleModalLabel">Formulir Data</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</template>
 			<template v-slot:body>
 				<div class="mx-2 my-4">
 					<div class="form-group">
-						<BaseInput v-model="payload.nama" label="Nama Paket" type="text" :required="true" placeholder="input disini..." />
+						<BaseInput v-model="payload.nama" label="Nama Paket" type="text" :required="true"
+							placeholder="input disini..." />
+						<small class="text-danger">
+							{{ errorPayload.nama }}
+						</small>
 					</div>
 
 					<div class="form-group mt-3">
-						<BaseInput v-model.number="payload.harga" label="Harga" type="number" :required="true" placeholder="input disini..." />
+						<BaseInput v-model.number="payload.harga" label="Harga" type="number" :required="true"
+							placeholder="input disini..." />
+						<small class="text-danger">
+							{{ errorPayload.harga }}
+						</small>
 					</div>
 
-                    <div class="form-group mt-3">
-						<BaseInput v-model="payload.waktu_kerja" label="Waktu kerja" type="text" :required="true" placeholder="input disini..." />
+					<div class="form-group mt-3">
+						<BaseInput v-model="payload.waktu_kerja" label="Waktu kerja" type="text" :required="true"
+							placeholder="input disini..." />
+						<small class="text-danger">
+							{{ errorPayload.waktu_kerja }}
+						</small>
 					</div>
 				</div>
 			</template>
@@ -120,46 +145,46 @@
 	</div>
 </template>
 <style scoped>
-	.v-enter-active {
-		transition: opacity 0.5s ease;
-	}
+.v-enter-active {
+	transition: opacity 0.5s ease;
+}
 
-	.v-enter-from,
-	.v-leave-to {
-		opacity: 0;
-	}
+.v-enter-from,
+.v-leave-to {
+	opacity: 0;
+}
 
-	.table-enter-active {
-		transition: all 0.3s ease;
-	}
+.table-enter-active {
+	transition: all 0.3s ease;
+}
 
-	.table-enter-from,
-	.table-leave-to {
-		opacity: 0;
-		transform: translateX(30px);
-	}
+.table-enter-from,
+.table-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
 
-	.table {
-		overflow: hidden;
-	}
+.table {
+	overflow: hidden;
+}
 
-	.defend-enter-active {
-		transition: all 0.1s ease;
-	}
+.defend-enter-active {
+	transition: all 0.1s ease;
+}
 
-	.defend-enter-active{
-		transition-delay: 0.1s;
-	}
+.defend-enter-active {
+	transition-delay: 0.1s;
+}
 
-	.defend-enter-from,
-	.defend-leave-to {
-		opacity: 0;
-		transform: translateX(30px);
-	}
+.defend-enter-from,
+.defend-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
 
-	.defend {
-		overflow: hidden;
-	}
+.defend {
+	overflow: hidden;
+}
 </style>
 <script setup>
 import BaseInput from '../component/Input/BaseInput.vue'
@@ -180,37 +205,37 @@ import Paket from '../../utils/Paket';
 const payloadList = ref([])
 const meta = reactive({
 	sortIcon: {
-    nama       : 'fa-sort',
-    harga      : 'fa-sort',
-    waktu_kerja      : 'fa-sort',
-    created_at : 'fa-sort-up'
-  },
-	search        : "",
-	limit         : 10,
-	page          : 1,
-	total         : 1,
-	total_in_page : 0,
-	sort          : "desc",
-	orderBy       : "created_at"
+		nama: 'fa-sort',
+		harga: 'fa-sort',
+		waktu_kerja: 'fa-sort',
+		created_at: 'fa-sort-up'
+	},
+	search: "",
+	limit: 10,
+	page: 1,
+	total: 1,
+	total_in_page: 0,
+	sort: "desc",
+	orderBy: "created_at"
 })
 
 const getPayloadList = () => {
 	Paket.getAllList(meta)
-	.then((res) => {
-		let item = res.data
-		meta.total         = item.meta.total
-		meta.total_in_page = item.meta.total_in_page
+		.then((res) => {
+			let item = res.data
+			meta.total = item.meta.total
+			meta.total_in_page = item.meta.total_in_page
 
-		payloadList.value = item.data
-	})
-	.catch((err) => {
-		console.log(err);
-	})
+			payloadList.value = item.data
+		})
+		.catch((err) => {
+			console.log(err);
+		})
 }
 
 /* UPSERT DATA FUNCTION */
 const payload = reactive({
-	nama : '',
+	nama: '',
 	harga: '',
 	waktu_kerja: ''
 })
@@ -220,39 +245,44 @@ const errorPayload = ref('');
 const upsertPayload = async () => {
 	try {
 		const payloadSchema = Yup.object().shape({
-      nama: Yup.string()
-      .required('Field harus diisi')
-      .min(2, 'Field minimal terdiri dari 2 karakter')
-      .max(150, 'Field maksimal terdiri dari 150 karakter'),
-      harga: Yup.number()
-      .typeError('Field harus bertipe nomor')
-      .required('Field harus diisi'),
-      waktu_kerja: Yup.string()
-      .required('Field harus diisi')
-    });
-    
-    await payloadSchema.validate(payload, { abortEarly: false });
+			nama: Yup.string()
+				.required('Field harus diisi')
+				.min(2, 'Field minimal terdiri dari 2 karakter')
+				.max(150, 'Field maksimal terdiri dari 150 karakter'),
+			harga: Yup.number()
+				.typeError('Field harus bertipe nomor')
+				.required('Field harus diisi'),
+			waktu_kerja: Yup.string()
+				.required('Field harus diisi')
+				.max(150, 'Field maksimal terdiri dari 150 karakter'),
+		});
+
+		await payloadSchema.validate(payload, { abortEarly: false });
 		Paket.upsert(payload)
-		.then((res) => {
-			showHideModal()
-			Other.toastSuccess({
-				type : "success",
-				title: "Berhasil",
-				msg  : "Data berhasil diproses!"
+			.then((res) => {
+				showHideModal()
+				Other.toastSuccess({
+					type: "success",
+					title: "Berhasil",
+					msg: "Data berhasil diproses!"
+				})
+
+				getPayloadList()
+			})
+			.catch((err) => {
+				Other.toastSuccess({
+					type: "error",
+					title: "Ada kesalahan sistem",
+					msg: "Server sedang maintenance"
+				})
 			})
 
-			getPayloadList()
-		})
-    .catch((err) => {
-			console.log(err);
-		})
-		
-	} catch (error) {
+	} catch (err) {
 		const errorMessages = err.inner.reduce((errors, error) => {
-      errors[error.path] = error.message;
-      return errors;
-    }, {});
-    errorPayload.value = errorMessages;
+			errors[error.path] = error.message;
+			return errors;
+		}, {});
+		errorPayload.value = errorMessages;
 	}
 }
 
@@ -276,33 +306,33 @@ const deleteConfirm = (params) => {
 	let dataId = params.dataId
 
 	Other.sweetAlertQuestion({
-		title      : "Hapus?",
-		msg        : "Anda tidak dapat memulihkan data setelah dihapus",
-		confirmMsg : "Hapus",
-		callback   : () => {deletePayload(dataId)}
+		title: "Hapus?",
+		msg: "Anda tidak dapat memulihkan data setelah dihapus",
+		confirmMsg: "Hapus",
+		callback: () => { deletePayload(dataId) }
 	})
 }
 
 const deletePayload = (dataId) => {
 	Paket.delete(dataId)
-	.then((res) => {
-		Other.toastSuccess({
-			type : "success",
-			title: "Berhasil",
-			msg  : "Data berhasil diproses!"
-		})
+		.then((res) => {
+			Other.toastSuccess({
+				type: "success",
+				title: "Berhasil",
+				msg: "Data berhasil diproses!"
+			})
 
-		getPayloadList()
-	})
-	.catch((err) => {
-		console.log(err);
-	})
+			getPayloadList()
+		})
+		.catch((err) => {
+			console.log(err);
+		})
 }
 
 /* ANOTHER FUNCTION */
 const paggination = (data) => {
-  meta.page = data.n_page
-  getPayloadList()
+	meta.page = data.n_page
+	getPayloadList()
 }
 
 const modal = ref(null)
@@ -315,24 +345,24 @@ const showHideModal = (params) => {
 }
 
 const sortingData = (sort, by) => {
-  for (const key in meta.sortIcon) {
-    if (by === (meta.sortIcon)[key]) {
-      continue
-    }
-    (meta.sortIcon)[key] = 'fa-sort'
-  }
+	for (const key in meta.sortIcon) {
+		if (by === (meta.sortIcon)[key]) {
+			continue
+		}
+		(meta.sortIcon)[key] = 'fa-sort'
+	}
 
-  if (sort == 'asc') {
-    meta.orderBy = by
-    meta.sort = 'desc'
-    meta.sortIcon[by] = 'fa-sort-up'
-  } else if (sort == 'desc') {
-    meta.orderBy = by
-    meta.sort = 'asc'
-    meta.sortIcon[by] = 'fa-sort-down'
-  }
+	if (sort == 'asc') {
+		meta.orderBy = by
+		meta.sort = 'desc'
+		meta.sortIcon[by] = 'fa-sort-up'
+	} else if (sort == 'desc') {
+		meta.orderBy = by
+		meta.sort = 'asc'
+		meta.sortIcon[by] = 'fa-sort-down'
+	}
 
-  getPayloadList()
+	getPayloadList()
 }
 
 const clearInput = () => {
@@ -345,11 +375,13 @@ const clearInput = () => {
 
 		delete payload.id
 	}
+
+	errorPayload.value = ''
 }
 
 onMounted(() => {
 	modal.value = new myModal('#myModal', {
-		keyboard:false
+		keyboard: false
 	})
 
 	getPayloadList()
