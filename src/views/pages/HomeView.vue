@@ -10,7 +10,7 @@
         <p class="text-subtitle text-muted">A good dashboard to display your statistics</p>
       </div>
       <section class="section">
-        <div class="row">
+        <div class="row" v-if="data">
           <div class="col-lg-6">
             <div class="card">
               <div class="card-head">Total Order</div>
