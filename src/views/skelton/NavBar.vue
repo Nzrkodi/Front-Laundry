@@ -10,9 +10,10 @@
         <li class="dropdown">
           <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
             <div class="avatar me-1">
-              <img src="../../assets/images/avatar/avatar-s-1.png" alt="" srcset="">
+              <!-- <img src="../../assets/images/avatar/avatar-s-1.png" alt="" srcset="">/ -->
             </div>
             <div class="d-none d-md-block d-lg-inline-block">Hi, Saugi</div>
+            <a role="button" class="ms-5" @click="logout">Logout</a>
           </a>
           <div class="dropdown-menu dropdown-menu-end">
             <a class="dropdown-item" href="#"> Account</a>
@@ -28,6 +29,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import Other from '../../utils/Other';
+import { useRouter } from 'vue-router'
 
 // Pusher.logToConsole = true;
 
@@ -50,6 +52,20 @@ const getNotif = () => {
 
     console.log('ini notif', data);
   });
+}
+
+const router = useRouter()
+
+const logout = () => {
+  Other.sweetAlertQuestion({
+    title: "Logout?",
+    msg: "Anda ingin logout",
+    confirmMsg: "Logout",
+    callback: () => {
+      localStorage.clear()
+      router.push('/login')
+    }
+  })
 }
 
 onMounted(() => {
